@@ -53,4 +53,28 @@ if ( ! function_exists( 'cwnet_remove_personal_options' ) ) {
 }
 add_action( 'show_user_profile', 'cwnet_remove_personal_options',10,1 );
 
+
+// ADD USERS TO CW SITES
+////
+
+function cwnet_user_sites_update( $user_id ) {
+	$sites = array('1');
+	$role = 'subscriber';
+	// global $current_user;
+	// $user_circle = get_user_meta($current_user->ID,'user_circle',true);
+	// $user_circle = $_POST['user_circle'];
+	// if ( array_key_exists('ID',$user_circle) && $user_circle['ID'] != '' ) {
+	//	$circle_site = get_post_meta($user_circle['ID'],'_circle_site',true);
+	//	if ( array_key_exists('blog_id', $circle_site) && $circle_site['blog_id'] != '' )
+	//		$sites[] = $circle_site['blog_id'];
+	// }
+	foreach ( $sites as $s ) {
+//		if ( ! is_user_member_of_blog( $user_id, $s ) )
+			add_user_to_blog( $s, $user_id, $role );
+	}
+	return;
+}
+// add_action('personal_options_update','cwnet_user_sites_update');
+// add_action('user_register','cwnet_user_sites_update',10,1);
+add_action('wpmu_activate_user','cwnet_user_sites_update',10,1);
 ?>
