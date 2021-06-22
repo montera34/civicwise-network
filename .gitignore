@@ -1,0 +1,27 @@
+# Node
+node_modules/
+package-lock.json
+
+# vim editor
+*.swp
+*.swo
+
+# wordpress
+wp-config.php
+
+# apache web server
+.htaccess
+
+# this theme config
+config.php
+
+# source files that should be generated with gulp copy-assets
+src/js/assets/
+src/sass/assets/
+
+# compiled JS scripts and CSS that should be generated with gulp scripts and gulp styles
+js/*.js
+css/*
+
+# minified images that should be generated with gulp imagemin
+img/*
