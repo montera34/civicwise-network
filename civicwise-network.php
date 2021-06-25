@@ -10,9 +10,10 @@ Text Domain: cwnet
 Domain Path: /lang/
  */
 
-// CONSTANTS
+// LOAD CONSTANTS
 // TODO: to include in plugin config page in dashboard
 require_once("config.php");
+add_action('init','cwnet_plugin_vars');
 
 // LOAD PLUGIN TEXT DOMAIN
 // FOR STRING TRANSLATIONS
@@ -21,10 +22,29 @@ function cwnet_load_textdomain() {
 	load_plugin_textdomain( 'cwnet', false, plugin_basename( dirname( __FILE__ ) ) . '/lang/' ); 
 }
 
+
+function cwnet_enqueue_scripts() {
+	wp_enqueue_script( 'multiple-select', plugins_url( '/js/multiple-select.min.js', __FILE__ ), array('jquery-core'), NULL, true );
+	wp_enqueue_script( 'cwnet', plugins_url( '/js/cwnet.js' , __FILE__ ), array('multiple-select'), NULL, true );
+}
+add_action( 'wp_enqueue_scripts', 'cwnet_enqueue_scripts',99 );
+
+function cwnet_enqueue_styles() {
+	wp_enqueue_style('cwnet',  plugins_url( '/css/cwnet.css', __FILE__ ), array(), NULL);
+	wp_enqueue_style('multiple-select',  plugins_url( '/css/multiple-select.min.css', __FILE__ ), array(), NULL);
+}
+add_action( 'wp_footer', 'cwnet_enqueue_styles' );
+
 // include user registration functions
 require_once("inc/user-signup.php");
 
 // include user registration functions
 require_once("inc/user.php");
+
+// include template tags functions
+require_once("inc/templates-tags.php");
+
+// include gform functions
+require_once("inc/gforms.php");
 
 ?>

@@ -116,7 +116,8 @@ function cwnet_signup_extra_fields() {
 
 }
 //this is the hook for wp
-add_action( 'register_form', 'cwnet_signup_extra_fields' );
+// add_action( 'register_form', 'cwnet_signup_extra_fields' );
+//add_action( 'signup_extra_fields', 'cwnet_signup_extra_fields' );
 
 function cwnet_signup_scripts() {
 	wp_enqueue_script('jquery-core', false, array(), NULL, false);
@@ -150,7 +151,7 @@ function cwnet_signup_validation( $errors, $user_name, $user_email ) {
 
 	return $errors;
 }
-add_filter( 'registration_errors', 'cwnet_signup_validation', 10, 3 );
+//add_filter( 'registration_errors', 'cwnet_signup_validation', 10, 3 );
 
 /**
  * Save sign up extra fields
@@ -179,7 +180,7 @@ function cwnet_user_register( $user_id ) {
 	return;
 
 }
-add_action( 'user_register', 'cwnet_user_register' );
+//add_action( 'user_register', 'cwnet_user_register' );
 
 /**
  * Create persona entry based in user data

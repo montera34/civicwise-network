@@ -1,7 +1,7 @@
 <?php
 
 // theme magic vars
-function cwnet_theme_vars() {
+function cwnet_plugin_vars() {
 
 	if (!defined('CWNET_BLOGNAME'))
 	    define('CWNET_BLOGNAME', get_bloginfo('name'));
@@ -37,29 +37,13 @@ function cwnet_theme_vars() {
 	if (!defined('CWNET_PT_CL_PFX'))
 	    define('CWNET_PT_CL_PFX', '' );
 
-	// FAQs
-	if (!defined('CWNET_PT_FQ'))
-	    define('CWNET_PT_FQ', '' );
-	if (!defined('CWNET_PT_FQ_PFX'))
-	    define('CWNET_PT_FQ_PFX', '' );
-
-	// people
+	// wiser
 	if (!defined('CWNET_PT_P'))
 	    define('CWNET_PT_P', '' );
 	if (!defined('CWNET_PT_P_PFX'))
 	    define('CWNET_PT_P_PFX', '' );
 
-	// block
-	if (!defined('CWNET_PT_BK'))
-	    define('CWNET_PT_BK', '' );
-	if (!defined('CWNET_PT_BK_PFX'))
-	    define('CWNET_PT_BK_PFX', '' );
-
 	// TAXONOMIES
-	// status
-	if (!defined('CWNET_TX_ST'))
-	    define('CWNET_TX_ST', '' );
-
 	// location
 	if (!defined('CWNET_TX_LC'))
 	    define('CWNET_TX_LC', '' );
@@ -68,9 +52,9 @@ function cwnet_theme_vars() {
 	if (!defined('CWNET_TX_CO'))
 	    define('CWNET_TX_CO', '' );
 
-	// tags
-	if (!defined('CWNET_TX_TG'))
-	    define('CWNET_TX_TG', '' );
+	// interest
+	if (!defined('CWNET_TX_IN'))
+	    define('CWNET_TX_IN', '' );
 
 	// HEADER METAS
 	if (!defined('CWNET_META_IMG'))

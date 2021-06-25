@@ -24,7 +24,7 @@ function cwnet_is_user_staff($user) {
 		$user = wp_get_current_user();	
 
 	$us_allowed = CWNET_U_STAFF;
-	if ( array_intersect( $allowed_roles, $user->roles ) )
+	if ( array_intersect( $us_allowed, $user->roles ) )
 		return true;
 
 	return false;
@@ -45,6 +45,18 @@ function cwnet_hide_admin_bar($user) {
 
 	return;
 }
+add_action('init','cwnet_hide_admin_bar');
+
+function cwnet_dashboard_access($user) {
+	
+	if ( is_admin() && ! cwnet_is_user_staff($user) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		$p = get_page_by_path(CWNET_P_PROFILE);
+		$perma = get_permalink($p->ID);
+		wp_redirect( $perma );
+		exit;
+	}
+}
+add_action( 'init', 'cwnet_dashboard_access' );
 
 /**
  *
@@ -54,15 +66,11 @@ function cwnet_hide_admin_bar($user) {
  */
 function cwnet_redirect() {
 
-	if ( !is_page(array(CWNET_P_PROFILE)) )
+	if ( !is_page(CWNET_P_PROFILE) )
 		return;
 
-	if ( !is_user_logged_in() ) {
-		ob_start();
-		$u_current = esc_url_raw( get_permalink() );
-		wp_safe_redirect( wp_login_url($u_current) );
-		exit;
-	}
+	if ( !is_user_logged_in() )
+		cwnet_go_out();
 
 }
 add_action('get_header', 'cwnet_redirect');
@@ -75,8 +83,8 @@ add_action('get_header', 'cwnet_redirect');
  */
 function cwnet_go_out() {
 	ob_start();
-	$u_current = esc_url_raw( get_permalink($post->ID).'?horror=login' );
-	wp_safe_redirect( $u_current );
+	$u_current = esc_url_raw( get_permalink($post->ID) );
+	wp_safe_redirect( wp_login_url($u_current) );
 	exit;
 }
 
@@ -161,6 +169,6 @@ function cwnet_user_sites_update( $user_id ) {
 }
 // add_action('personal_options_update','cwnet_user_sites_update');
 // add_action('user_register','cwnet_user_sites_update',10,1);
-//add_action('wpmu_activate_user','cwnet_user_sites_update',10,1);
+// add_action('wpmu_activate_user','cwnet_user_sites_update',10,1);
 
 ?>
