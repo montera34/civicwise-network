@@ -65,6 +65,9 @@ function cwnet_plugin_vars() {
 	if (!defined('CWNET_P_PROFILE'))
 		define('CWNET_P_PROFILE','');
 	
+	// message page	
+	if (!defined('CWNET_P_MESSAGE'))
+		define('CWNET_P_MESSAGE','send-message');
 }
 
 ?>
