@@ -33,7 +33,8 @@ function cwnet_enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'cwnet_enqueue_scripts',99 );
 
 function cwnet_enqueue_styles() {
-	wp_enqueue_style('cwnet',  plugins_url( '/css/cwnet.css', __FILE__ ), array(), NULL);
+	wp_enqueue_style('fontello',  plugins_url( '/css/fonts.css', __FILE__ ), NULL, NULL);
+	wp_enqueue_style('cwnet',  plugins_url( '/css/cwnet.css', __FILE__ ), array('fontello'), NULL);
 	wp_enqueue_style('multiple-select',  plugins_url( '/css/multiple-select.min.css', __FILE__ ), NULL, NULL);
 	wp_enqueue_style('tippy', 'https://unpkg.com/tippy.js@6/themes/material.css', NULL, NULL);
 }
