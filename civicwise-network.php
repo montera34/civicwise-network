@@ -25,13 +25,17 @@ function cwnet_load_textdomain() {
 
 function cwnet_enqueue_scripts() {
 	wp_enqueue_script( 'multiple-select', plugins_url( '/js/multiple-select.min.js', __FILE__ ), array('jquery-core'), NULL, true );
-	wp_enqueue_script( 'cwnet', plugins_url( '/js/cwnet.js' , __FILE__ ), array('multiple-select'), NULL, true );
+//	wp_enqueue_script( 'popper', 'https://unpkg.com/@popperjs/core@^2.0.0', NULL, NULL, true );
+	wp_enqueue_script( 'popper', 'https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js', NULL, NULL, true );
+	wp_enqueue_script( 'tippy', 'https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js', array('popper'), NULL, true );
+	wp_enqueue_script( 'cwnet', plugins_url( '/js/cwnet.js' , __FILE__ ), array('multiple-select','tippy'), NULL, true );
 }
 add_action( 'wp_enqueue_scripts', 'cwnet_enqueue_scripts',99 );
 
 function cwnet_enqueue_styles() {
 	wp_enqueue_style('cwnet',  plugins_url( '/css/cwnet.css', __FILE__ ), array(), NULL);
-	wp_enqueue_style('multiple-select',  plugins_url( '/css/multiple-select.min.css', __FILE__ ), array(), NULL);
+	wp_enqueue_style('multiple-select',  plugins_url( '/css/multiple-select.min.css', __FILE__ ), NULL, NULL);
+	wp_enqueue_style('tippy', 'https://unpkg.com/tippy.js@6/themes/material.css', NULL, NULL);
 }
 add_action( 'wp_footer', 'cwnet_enqueue_styles' );
 

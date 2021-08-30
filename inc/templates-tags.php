@@ -79,7 +79,9 @@ function cwnet_wisers_mosaic() {
 	
 	if ( !empty($us) ) {
 		shuffle($us);
+		$count = 0;
 		foreach ( $us as $u ) {
+			$count++;
 			$m = get_userdata($u->ID);
 	
 			// name
@@ -119,8 +121,9 @@ function cwnet_wisers_mosaic() {
 			}
 	
 			// connector
-			$u_con_out = ( !empty($m->user_connector) ) ? '<span class="mosac-connector"><i class="fa fa-hand-peace-o"></i></span>' : '';
-	
+			$u_con_tt = __('This person is a Civicwise connector. You can contact her or him to ask anything in relation with Civicwise. ','cwnet');
+			$u_con_out = ( !empty($m->user_connector) ) ? '<span class="mosac-connector" data-tippy-content="'.$u_con_tt.'"><i class="fa fa-hand-peace-o"></i></span>' : '';
+
 			// circles
 			$u_cls = get_user_meta( $u->ID, 'user_'.CWNET_PT_CL);
 			if ( empty($u_cls) ) {
@@ -148,12 +151,12 @@ function cwnet_wisers_mosaic() {
 				'other' => 'fa fa-plus'
 			);
 			if ( !empty($m->user_url) )
-				$u_nets[] = '<a class="mosac-link" href="'.$m->user_url.'"><i class="fa fa-link" aria-hidden="true"></i></a>';
+				$u_nets[] = '<a class="mosac-link" href="'.$m->user_url.'" target="_blank"><i class="fa fa-link" aria-hidden="true"></i></a>';
 	
 			foreach ( $nets_data as $f => $i ) {
 				$url = get_user_meta($u->ID,'user_'.$f,true);
 				if ( !empty($url) )
-					$u_nets[] = '<a class="mosac-link" href="'.$url.'"><i class="'.$i.'" aria-hidden="true"></i></a>';
+					$u_nets[] = '<a class="mosac-link" href="'.$url.'" target="_blank"><i class="'.$i.'" aria-hidden="true"></i></a>';
 			}
 			$u_nets_out = ( !empty($u_nets) ) ? '<div class="mosac-links">'.implode(' ',$u_nets).$u_contact_out.'</div>' : '';
 	
