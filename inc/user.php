@@ -49,6 +49,9 @@ add_action('init','cwnet_hide_admin_bar');
 
 function cwnet_dashboard_access($user) {
 	
+	if ( get_current_blog_id() != '1' )
+		return;
+
 	if ( is_admin() && ! cwnet_is_user_staff($user) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		$p = get_page_by_path(CWNET_P_PROFILE);
 		$perma = get_permalink($p->ID);
@@ -65,6 +68,9 @@ add_action( 'init', 'cwnet_dashboard_access' );
  *
  */
 function cwnet_redirect() {
+
+	if ( get_current_blog_id() != '1' )
+		return;
 
 	if ( !is_page(CWNET_P_PROFILE) )
 		return;
