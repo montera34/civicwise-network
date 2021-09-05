@@ -1,0 +1,36 @@
+#map {
+	background-color: rgba(75,185,203,1);
+	position: relative;
+}
+.map-municipios {
+	translate: 5px; 
+}
+.map-municipio {
+	stroke: #fff;
+	stroke-width: 0.5;
+}
+.map-municipio:hover {
+	cursor: pointer;
+}
+.map-municipio-populated {
+	fill: rgba(239,75,65,1);
+}
+.map-municipio-populated:hover {
+	fill: rgba(239,75,65,.8);
+}
+.map-municipio-empty {
+	fill: rgba(255,255,255,.5);
+}
+.tooltip {
+	background-color: rgba(255,255,255,.8);
+	padding: 5px;
+	z-index: 99;
+}
+.aside {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	background-color: rgba(255,255,255,0.5);
+	padding: 10px;
+}
+

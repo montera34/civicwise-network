@@ -24,11 +24,15 @@ function cwnet_load_textdomain() {
 
 
 function cwnet_enqueue_scripts() {
-	wp_enqueue_script( 'multiple-select', plugins_url( '/js/multiple-select.min.js', __FILE__ ), array('jquery-core'), NULL, true );
+	
 //	wp_enqueue_script( 'popper', 'https://unpkg.com/@popperjs/core@^2.0.0', NULL, NULL, true );
 	wp_enqueue_script( 'popper', 'https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js', NULL, NULL, true );
 	wp_enqueue_script( 'tippy', 'https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js', array('popper'), NULL, true );
-	wp_enqueue_script( 'cwnet', plugins_url( '/js/cwnet.js' , __FILE__ ), array('multiple-select','tippy'), NULL, true );
+	wp_enqueue_script( 'd3', plugins_url( '/js/d3.min.js', __FILE__ ), array(), null, true );
+	wp_enqueue_script( 'topojson', plugins_url( '/js/topojson.min.js', __FILE__ ), array('d3'), null, true );
+	wp_enqueue_script( 'multiple-select', plugins_url( '/js/multiple-select.min.js', __FILE__ ), array('jquery-core'), NULL, true );
+	wp_enqueue_script( 'cwnet', plugins_url( '/js/cwnet.js' , __FILE__ ), array('multiple-select'), NULL, true );
+
 }
 add_action( 'wp_enqueue_scripts', 'cwnet_enqueue_scripts',99 );
 
@@ -40,8 +44,21 @@ function cwnet_enqueue_styles() {
 }
 add_action( 'wp_footer', 'cwnet_enqueue_styles' );
 
+function cwnet_slugify($urlString) {
+	$search = array('Ș', 'Ț', 'ş', 'ţ', 'Ş', 'Ţ', 'ș', 'ț', 'î', 'â', 'ă', 'Î', ' ', 'Ă', 'ë', 'Ë');
+	$replace = array('s', 't', 's', 't', 's', 't', 's', 't', 'i', 'a', 'a', 'i', 'a', 'a', 'e', 'E');
+	$str = str_replace($search, $replace, strtolower(trim($urlString)));
+	$str = preg_replace('/[^\w\d\-\ ]/', », $str);
+	$str = str_replace(' ', '-', $str);
+	$str = preg_replace('/-{2,}/', '-', $str);
+	return $str;
+}
+
 // include user registration functions
 require_once("inc/user-signup.php");
+
+// custom Rest API endpoints
+include_once('inc/rest-api.php');
 
 // include user registration functions
 require_once("inc/user.php");

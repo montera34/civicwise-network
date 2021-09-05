@@ -67,7 +67,11 @@ function cwnet_plugin_vars() {
 	
 	// message page	
 	if (!defined('CWNET_P_MESSAGE'))
-		define('CWNET_P_MESSAGE','send-message');
+		define('CWNET_P_MESSAGE','');
+
+	// network page
+	if (!defined('CWNET_P_NETWORK'))
+		define('CWNET_P_NETWORK','');
 }
 
 ?>
