@@ -264,7 +264,7 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	}
 
 	// Attach profile image to user
-	delete_user_meta($u->ID,'user_image');
+	// delete_user_meta($u->ID,'user_image');
 	if ( $imgtype != '' ) {
 		$attach = array(
 			'post_mime_type' => $imgtype['type'],
@@ -276,7 +276,7 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 		require_once(ABSPATH . 'wp-admin/includes/image.php');
 		$attach_data = wp_generate_attachment_metadata( $attach_id, $imgpath );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-		add_user_meta( $u->ID, 'user_image', $attach_id );
+		add_user_meta( $u->ID, 'user_image', $attach_id, true );
 	}
 
 	$profile = get_page_by_path(CWNET_P_PROFILE);

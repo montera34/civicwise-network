@@ -18,6 +18,16 @@
 	color: white;
 }
 
+.gform_body input,
+.gform_body textarea,
+.ms-choice {
+	border-color: #000 !important;
+	border-radius: 2px;
+}
+.ms-choice:hover {
+	color: #000;
+}
+
 /* Map */
 #map {
 	position: relative;
@@ -26,7 +36,7 @@
 	translate: 5px; 
 }
 .map-location {
-	stroke: #2f2f2f;
+	stroke: #fff;
 	stroke-width: 0.25;
 }
 .map-location:hover {
@@ -43,7 +53,7 @@
 	fill: #2f2f2f;
 }
 .map-location-empty {
-	fill: #fff;
+	fill: #2f2f2f;
 }
 .tooltip {
 	z-index: 99;
