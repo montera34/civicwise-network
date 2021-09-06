@@ -20,8 +20,8 @@ src/js/assets/
 src/sass/assets/
 
 # compiled JS scripts and CSS that should be generated with gulp scripts and gulp styles
-js/*.js
-css/*
+# js/*.js
+# css/*
 
 # minified images that should be generated with gulp imagemin
 img/*

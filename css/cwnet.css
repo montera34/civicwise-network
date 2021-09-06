@@ -1,0 +1,59 @@
+#signup-content {
+	padding: 14em 5em 14em 5em;
+	color: white;
+}
+#signup-content h2 {
+	font-weight: bold;
+	color: white;
+}
+#signup-content .lead-in {
+	font-size: 2em;
+}
+#signup-content a {
+	text-decoration: underline;
+	color: white;
+}
+#signup-content a:hover {
+	text-decoration: none;
+	color: white;
+}
+
+/* Map */
+#map {
+	position: relative;
+}
+.map-locations {
+	translate: 5px; 
+}
+.map-location {
+	stroke: #2f2f2f;
+	stroke-width: 0.25;
+}
+.map-location:hover {
+	cursor: pointer;
+}
+.map-location-populated {
+	fill: #00e5ff;
+}
+.map-location-populated:hover {
+	fill: #fff100;
+}
+.map-locations .disabled,
+.map-locations .disabled:hover {
+	fill: #2f2f2f;
+}
+.map-location-empty {
+	fill: #fff;
+}
+.tooltip {
+	z-index: 99;
+	text-align: left;
+}
+.aside {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	z-index: 99;
+	text-align: left;
+}
+
