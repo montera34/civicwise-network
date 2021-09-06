@@ -251,28 +251,45 @@ function cwnet_wisers_filters() {
 		</ul>
 	';
 
-	// circles
+	// interests
 	$args = array(
-		'post_type' => CWNET_PT_CL,
-		'nopaging' => true,
-		'orderby' => 'post_title',
-		'order' => 'ASC'
+		'taxonomy' => CWNET_TX_IN,
+		'hide_empty' => false
 	);
-	$filter = CWNET_PT_CL;
-	$cls = get_posts($args);
-	$cls_out = '
+	$filter = CWNET_TX_IN;
+	$ins = get_terms($args);
+	$ins_out = '
 		<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
-			<li class="filter-group-item"><button data-filter="" class="filter-group-btn filter-btn disabled"><i class="icon-circle-empty"></i> '.__('All circles','cwnet').'</button></li>
+			<li class="filter-group-item"><button data-filter="" class="filter-group-btn filter-btn disabled"><i class="icon-heart"></i> '.__('All interests','cwnet').'</button></li>
 	';
-	if ( ! empty($cls) ) {
-		$pt = CWNET_PT_CL;
-		foreach ( $cls as $cl )
-			$cls_out .= '<li class="filter-group-item"><button data-filter=".'.$pt.'-'.$cl->post_name.'" class="filter-group-btn filter-btn">'.$cl->post_title.'</button></li>';
+	if ( ! empty($ins) ) {
+		foreach ( $ins as $in )
+			$ins_out .= '<li class="filter-group-item"><button data-filter=".'.$filter.'-'.$in->slug.'" class="filter-group-btn filter-btn">'.$in->name.'</button></li>';
 	
 	}
-	$cls_out .= '</ul>';
+	$ins_out .= '</ul>';
 
-	$filters_out ='<div class="filters">'.$cons_out.$cls_out.'</div>';
+	// circles
+//	$args = array(
+//		'post_type' => CWNET_PT_CL,
+//		'nopaging' => true,
+//		'orderby' => 'post_title',
+//		'order' => 'ASC'
+//	);
+//	$filter = CWNET_PT_CL;
+//	$cls = get_posts($args);
+//	$cls_out = '
+//		<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
+//			<li class="filter-group-item"><button data-filter="" class="filter-group-btn filter-btn disabled"><i class="icon-circle-empty"></i> '.__('All circles','cwnet').'</button></li>
+//	';
+//	if ( ! empty($cls) ) {
+//		foreach ( $cls as $cl )
+//			$cls_out .= '<li class="filter-group-item"><button data-filter=".'.$filter.'-'.$cl->post_name.'" class="filter-group-btn filter-btn">'.$cl->post_title.'</button></li>';
+//	
+//	}
+//	$cls_out .= '</ul>';
+
+	$filters_out ='<div class="filters">'.$cons_out.$ins_out.'</div>';
 
 	return $filters_out;
 }
