@@ -48,13 +48,37 @@ function cwnet_gform_populate_u_taxs( $form ) {
 
 			$choices = array();
 			$dv = '';
-			$i = 0;
 			foreach ( $cls as $c )
 				$choices[] = array( 'text' => $c->post_title, 'value' => $c->ID );
 			$field->placeholder = ' ';
 			$field->choices = $choices;
 			$field->defaultValue = $dv;
 		
+		}
+		elseif ( $field->inputName == 'lang' ) {
+			$url = plugins_url('/data/lang.iso.639.1.csv', dirname(__FILE__));
+			// fetch
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			$data = curl_exec($curl);
+			curl_close($curl);
+
+			$choices = array();
+			$dv = '';
+			$csv = str_getcsv($data, "\n");
+			$count = 0;
+			foreach ( $csv as &$row ) {
+				$count++;
+				if ( $count == 1 )
+					continue;
+				$row = str_getcsv($row, '|');
+				$choices[] = array( 'text' => $row[1], 'value' => $row[0] );
+			}	
+			$field->placeholder = ' ';
+			$field->choices = $choices;
+			$field->defaultValue = $dv;
 		}
 		else {
 			$tx = $field->inputName;
@@ -123,6 +147,7 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	$cos_new = array();
 	$lcs = array();
 	$lcs_new = array();
+	$lgs = array();
 
 	foreach ( $form['fields'] as $f ) {
 		if ( strpos( $f->cssClass, 'auto-save' ) === false )
@@ -175,12 +200,17 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 				continue;
 			$lcs_new = trim($v);
 		}
+		elseif ( $f->inputName == 'lang' ) {
+			$v = is_object( $f ) ? $f->get_value_export( $entry ) : '';
+			$lgs = explode( ',', $v );
+		}
 	}
 
 	delete_user_meta($u->ID,'user_'.CWNET_PT_CL);
 	if ( !empty($cls) ) {
-		foreach ( $cls as $t )
-			add_user_meta($u->ID,'user_'.CWNET_PT_CL,$t);
+		foreach ( $cls as $t ) {
+			$tmp_ = add_user_meta($u->ID,'user_'.CWNET_PT_CL,$t);
+		}
 	}
 
 	$ins_ids = array();
@@ -223,6 +253,13 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	elseif ( !empty($lcs) ) {
 		foreach ( $lcs as $t ) {
 			add_user_meta($u->ID,'user_'.CWNET_TX_LC,$t);
+		}
+	}
+
+	delete_user_meta($u->ID,'user_lang');
+	if ( !empty($lgs) ) {
+		foreach ( $lgs as $t ) {
+			$tmp_ = add_user_meta($u->ID,'user_lang',trim($t));
 		}
 	}
 

@@ -38,6 +38,9 @@ function cwnet_get_u_edit_form() {
 		$fields[CWNET_PT_CL] = $inputs;
 	}
 	
+	$u_langs = get_user_meta($u->ID,'user_lang');
+	if ( !empty($u_langs) )
+		$fields['lang'] = $u_langs;
 
 	$txs = array(
 		CWNET_TX_CO,
@@ -78,6 +81,22 @@ function cwnet_wisers_mosaic() {
 	
 	if ( !empty($us) ) {
 		shuffle($us);
+
+		// load langs name
+		$url = plugins_url('/data/lang.iso.639.1.csv', dirname(__FILE__));
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		$data = curl_exec($curl);
+		curl_close($curl);
+		$csv = str_getcsv($data, "\n");
+		foreach ( $csv as &$row ) {
+			$row = str_getcsv($row, "|");
+		}
+		$langs = array_column($csv,'1','0');
+
+		// connector tooltip
 		$u_con_tt = __('This person is a CivicWise connector. That means she or he is an active member of our network that you can contact with questions or concerns, giving you everything you need to take full advantage of our organization.','cwnet');
 		foreach ( $us as $u ) {
 			$m = get_userdata($u->ID);
@@ -92,9 +111,20 @@ function cwnet_wisers_mosaic() {
 			// avatar
 			$u_img = get_user_meta($u->ID, 'user_image',true);
 			$u_img_out = ( ! empty($u_img) ) ? wp_get_attachment_image($u_img['ID'],'thumbnail','',array('class' => 'circular-square') ) : '';
-//	var_dump($u_img);
-			// $u_img = ( !empty($m->_u_org) ) ? '<dt>'.__('Organisation','hcanarias').'</dt><dd>'.$m->_u_org.'</dd>' : '';
 	
+			// languages
+			$u_lgs_class = '';
+			$u_lgs = get_user_meta( $u->ID, 'user_lang');
+			$u_lgs_list = array();
+			if ( !empty($u_lgs) ) {
+				foreach ( $u_lgs as $lg ) {
+					
+					array_push($u_lgs_list,$langs[$lg]);
+					$u_lgs_class .= ' lang-'.$lg;
+				}
+			}
+			$u_lgs_out = ( !empty($u_lgs_list) ) ? '<div class="mosac-list mosac-lang"><i class="icon-language" aria-hidden="true"></i><span>'.implode(', ',$u_lgs_list).'</span></div>' : '';
+
 			// location
 			$u_loc = array();
 			$u_loc_class = '';
@@ -174,7 +204,7 @@ function cwnet_wisers_mosaic() {
 					<header><h2 class="mosac-tit">'.$u_name.$u_con_out.'</h2></header>
 					<div class="mosac-main">'
 						.$u_bio_out
-//						.$u_org_out
+						.$u_lgs_out
 						.$u_loc_out
 						.$u_cls_out
 						.$u_ins_out

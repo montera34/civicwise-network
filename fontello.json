@@ -79,6 +79,12 @@
       "search": [
         "cw"
       ]
+    },
+    {
+      "uid": "ddecf5ad7935e3fb1b70dac6ed00d06a",
+      "css": "language",
+      "code": 59397,
+      "src": "entypo"
     }
   ]
 }
