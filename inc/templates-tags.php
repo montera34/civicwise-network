@@ -176,7 +176,7 @@ function cwnet_wisers_mosaic() {
 	
 			// contact btn
 			$u_contact_url = get_permalink(CWNET_P_MESSAGE).'?to='.$u->ID;
-			$u_contact_out = ' <a class="contact-btn" href="'.$u_contact_url.'" title="'.__('Send a message to this wiser','cw').'"><i class="icon-mail-alt" aria-hidden="true"></i></a>';
+			$u_contact_out = ' <a class="contact-btn" href="'.$u_contact_url.'" data-tippy-content="'.__('Send a message to this wiser','cw').'"><i class="icon-mail-alt" aria-hidden="true"></i></a>';
 	
 			// social networks
 			$u_nets = array();
@@ -195,7 +195,7 @@ function cwnet_wisers_mosaic() {
 				if ( !empty($url) )
 					$u_nets[] = '<a class="mosac-link" href="'.$url.'" target="_blank"><i class="'.$i.'" aria-hidden="true"></i></a>';
 			}
-			$u_nets_out = ( !empty($u_nets) ) ? '<div class="mosac-links">'.implode(' ',$u_nets).$u_contact_out.'</div>' : '';
+			$u_nets_out = ( !empty($u_nets) ) ? '<div class="mosac-links">'.implode(' ',$u_nets).$u_contact_out.'</div>' : '<div class="mosac-links">'.$u_contact_out.'</div>';
 	
 			$us_out .= '
 			<div class="mosac-item'.$u_ins_class.$u_loc_class.$u_cls_class.$u_con_class.'"><div class="bg-item">

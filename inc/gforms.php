@@ -106,7 +106,11 @@ function cwnet_gform_populate_u_taxs( $form ) {
 	return $form;
 }
 
-// POPULATE PROFILE IMAGE FIELD
+/**
+ * 
+ * POPULATE PROFILE IMAGE FIELD
+ *
+ */
 function cwnet_gform_populate_u_img( $form ) {
 
 	$u = wp_get_current_user();
@@ -288,6 +292,86 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	exit;
 }
 
+/**
+ *
+ *  SEND MESSAGE TO USER
+ *
+ */
+function cwnet_gform_send_message( $entry,$form ) {
+
+	$fs = array();
+	foreach ( $form['fields'] as $f ) {
+		if ( $f->inputName == '' )
+			continue;
+
+		if ( $f->inputName == 'to' && $f->inputName != '' ) {
+
+			$to = $entry[$f->id];
+			$args = array(
+				'include' => array($to)
+			);
+			$to_data = get_users($args);
+			$fs[$f->inputName] = $to_data[0]->user_email;
+		}
+		elseif ( $f->inputName == 'message' ) {
+			
+			$fs[$f->inputName] = wp_strip_all_tags( $entry[$f->id] );
+		}
+	}
+
+	if ( $fs['to'] == '' ) {
+		$target = esc_url_raw( get_permalink(CWNET_P_NETWORK) );
+		ob_start();
+		wp_safe_redirect( $target );
+		exit;
+	}
+
+	$from = wp_get_current_user();
+	$from_meta = array_map( function( $a ){ return $a[0]; }, get_user_meta( $from->ID ) );
+	
+	$from_email = $from->user_email;
+	$from_name = $from_meta['first_name']. ' ' .$from_meta['last_name'];
+	
+	$from_lcs = get_user_meta($from->ID,'user_location');
+	$from_lcs_out = implode(', ', wp_list_pluck( $from_lcs,'name' ) );
+	
+	$from_cos = get_user_meta($from->ID,'user_country');
+	$from_cos_out = implode(', ', wp_list_pluck( $from_cos,'name' ) );
+
+	$from_ins = get_user_meta($from->ID,'user_interest');
+	$from_ins_out = implode(', ', wp_list_pluck( $from_ins,'name' ) );
+
+	$headers = array(
+		'Reply-To: '.$from_name.' <'.$from_email.'>',
+	);
+
+	$subject = '['.CWNET_BLOGNAME.'] '.sprintf(__('%s has sent you a message','cwnet'),$from_name);
+
+	$message =
+__('Information about the person that is contacting you using civicwise\'s texting service:','cwnet'). "\r\n".
+__('Name','cwnet').'. '.$from_name. "\r\n" .
+__('Email','cwnet').'. '.$from_email. "\r\n".
+__('Location','cwnet').'. '.$from_lcs_out. "\r\n".
+__('Country','cwnet').'. '.$from_cos_out. "\r\n".
+__('Interests','cwnet').'. '.$from_ins_out. "\r\n\r\n".
+__('Message:','cwnet'). "\r\n".
+$fs['message']. "\r\n\r\n".
+__('To respond this person you can direcly reply this email.','cwnet'). "\r\n".
+__('This message has been sent using Civicwise\'s texting service available in https://civicwise.org/our-people. Regarding your privacy, your email address has not been shown to the person contacting you.','cwnet'). "\r\n";
+
+	$sent = wp_mail($fs['to'],$subject,$message,$headers);
+
+	if ( $sent === false )
+		$target = esc_url_raw( get_permalink(CWNET_P_NETWORK).'?horror=contact' );
+	else
+		$target = esc_url_raw( get_permalink(CWNET_P_NETWORK).'?action=contact&to='.$to );
+
+	ob_start();
+	wp_safe_redirect( $target );
+	exit;
+
+}
+
 // FORM ACTIONS
 
 // EDIT PROFILE
@@ -302,5 +386,73 @@ add_filter( 'gform_pre_submission_filter__2', 'cwnet_gform_populate_u_img' );
 // update user
 add_action( 'gform_after_submission_2', 'cwnet_gform_update_u_fields', 11, 2);
 
+// SEND MESSAGE
+add_action( 'gform_after_submission_4', 'cwnet_gform_send_message', 10, 2);
+
+/**
+ *
+ * Render populated send message form
+ *
+ */
+function cwnet_get_send_message_form() {
+
+	if ( !is_user_logged_in() )
+		exit;
+
+	$to = get_query_var('to');
+	$u_data = get_userdata($to);
+	$u_fname = $u_data->first_name;
+	$u_lname = $u_data->last_name;
+	$u_name = ( !empty($u_fname) ) ? $u_fname. ' ' .$u_lname : $u_data->user_login;
+
+	$fields = array(
+		'to_name'=> $u_name,
+	);
+	$form_out = gravity_form( 4, false, false, false, $fields, false);
+
+	$btn_back_out = '<div class="btn-back"><a class="button" href="'.get_permalink(CWNET_P_NETWORK).'">'.__('Go back to the mosaic','cwnet').'</a></div>';
+
+	return $btn_back_out.$form_out;
+}
+
+
+/**
+ *
+ * Render send message feedback
+ *
+ */
+function cwnet_get_send_message_feedback() {
+
+	$to = get_query_var('to');
+	$action = get_query_var('action');
+	$horror = get_query_var('horror');
+
+	$msg_out = '';
+	$msg_class = '';
+	if ( !empty($action) && !empty($to) ) {
+		$to_data = get_userdata($to);
+		$to_fname = $to_data->first_name;
+		$to_lname = $to_data->last_name;
+		$to_name = ( !empty($to_fname) ) ? $to_fname. ' ' .$to_lname : $to_data->user_login;
+		$msg = sprintf(__('Your message has been sent successfully to %s.','cwnet'),$to_name);
+		$msg_class = 'info';
+	}
+	elseif ( !empty($action) && empty($to) ) {
+		$msg = __('Your message has been sent successfully.','cwnet');
+		$msg_class = 'info';
+	}
+	elseif ( !empty($horror) ) {
+		$msg = __('There was a problem sending your message. Sorry about that. Try again, please.','cwnet');
+		$msg_class = 'error';
+	}
+	else {
+		return;
+	}
+	
+	if ( !empty($msg) )
+		$msg_out = '<div class="msg-container msg-'.$msg_class.'"><strong>'.$msg.'</strong></div>';
+
+	return $msg_out;
+}
 
 ?>

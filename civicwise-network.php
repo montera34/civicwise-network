@@ -54,6 +54,9 @@ function cwnet_slugify($urlString) {
 	return $str;
 }
 
+// include wordpress functions filters and redefinitions
+require_once("inc/wordpress-redefinitions.php");
+
 // include user registration functions
 require_once("inc/user-signup.php");
 

@@ -72,7 +72,7 @@ function cwnet_redirect() {
 	if ( get_current_blog_id() != '1' )
 		return;
 
-	if ( !is_page(CWNET_P_PROFILE) )
+	if ( !is_page(CWNET_P_PROFILE) && !is_page(CWNET_P_MESSAGE) )
 		return;
 
 	if ( !is_user_logged_in() )

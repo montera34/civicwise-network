@@ -63,15 +63,15 @@ function cwnet_plugin_vars() {
 	// PAGES
 	// profile page
 	if (!defined('CWNET_P_PROFILE'))
-		define('CWNET_P_PROFILE','');
+		define('CWNET_P_PROFILE','ID');
 	
 	// message page	
 	if (!defined('CWNET_P_MESSAGE'))
-		define('CWNET_P_MESSAGE','');
+		define('CWNET_P_MESSAGE','ID');
 
 	// network page
 	if (!defined('CWNET_P_NETWORK'))
-		define('CWNET_P_NETWORK','');
+		define('CWNET_P_NETWORK','ID');
 }
 
 ?>

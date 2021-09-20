@@ -28,6 +28,14 @@
 	color: #000;
 }
 
+/* Mosaic */
+.mosac-links {
+	min-height: 24px;
+}
+.contact-btn {
+	float: right;
+}
+
 /* Map */
 #map {
 	position: relative;
@@ -65,5 +73,23 @@
 	left: 5px;
 	z-index: 99;
 	text-align: left;
+}
+
+.msg-container {
+	padding: 1.5em;
+	margin: 2em;
+	font-size: 1.5em;
+	color: white;
+}
+.msg-info {
+	background-color: #0f0;
+}
+.msg-error {
+	background-color: #f00;
+}
+
+/* send message form */
+.btn-back {
+	margin-bottom: 2em;
 }
 
