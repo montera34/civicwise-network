@@ -58,7 +58,7 @@ Promise.all([countries]).then(function(values){
 		.on('click', function(e,d) {
 			if ( d.properties.user_count == 0 )
 				return;
-			sidebar.html('<button class="filter-btn filter-group-btn disabled">'+d.properties.name+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter="">x</button>').transition().duration(200).style('display', 'block')
+			sidebar.html('<button class="filter-btn filter-group-btn disabled">'+d.properties.name+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter=""><i class="icon-cancel"></i></button>').transition().duration(200).style('display', 'block')
 		});
 
 	// Isotope filtrable mosaic
@@ -76,7 +76,7 @@ Promise.all([countries]).then(function(values){
 		var filters = {};
 
 		// filters as buttons
-		$('.filters').on( 'click', 'button', function( event ) {
+		$('.filters').on( 'click', 'button.filter-group-btn', function( event ) {
 			var $button = $( event.currentTarget );
 			// get group key
 			var $buttonGroup = $button.parents('.filter-group');
@@ -132,6 +132,36 @@ Promise.all([countries]).then(function(values){
 
 		});
 
+		// dropdown filters
+		$('.dropdown').on('click','.dropdown-btn',function(event) {
+			var $button = $( event.currentTarget );
+			var target = $button.attr('data-target');
+			$(target).toggle();
+		});
+		$('.dropdown-content').on('click','.filter-btn',function(event) {
+			var $button = $( event.currentTarget );
+			var target = $button.attr('data-target');
+			$(target).hide();
+			$(this).parents('.dropdown').children('.dropdown-btns').find('.filter-group-btn').remove();
+			$(this).parents('.dropdown').children('.dropdown-btns').append('<button class="filter-btn filter-group-btn disabled">'+$button.text()+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter="" data-target="'+target+'"><i class="icon-cancel"></i></button>');
+		});
+		$('.dropdown').on( 'click', '.filter-btn-reset', function(event) {
+			var $button = $( event.currentTarget );
+			var target = $button.attr('data-target');
+			var $buttonGroup = $(target).children('.filter-group');
+			var filterGroup = $buttonGroup.attr('data-filter-group');
+			filters[ filterGroup ] = $button.attr('data-filter').substring(1);
+			// combine filters
+			var filterValue = concatValues( filters );
+			// set filter for Isotope
+			$grid.isotope({ filter: filterValue });
+			$buttonGroup.find('.disabled').removeClass('disabled');
+			$buttonGroup.children().first().children('button').addClass('disabled');
+			$(this).hide();
+			$(this).siblings('.filter-group-btn').hide();
+
+		});
+
 	})(jQuery);
 
 	// flatten object by concatting values
@@ -142,10 +172,11 @@ Promise.all([countries]).then(function(values){
 		}
 		return value;
 	}
+
 })
 
 let tooltip = d3.select("body").append('div').attr('id', 'map-tooltip').attr('class','tooltip button filter-btn disabled').attr('style', 'position: absolute; display: none;');
-let sidebar = d3.select("#map").append('div').attr('id', 'map-sidebar').attr('class','aside filter-group').attr('style', 'display: none;');
+let sidebar = d3.select("#map").append('div').attr('id', 'map-sidebar').attr('class','map-aside filter-group').attr('style', 'display: none;');
 
 // tippy tooltips
 tippy('[data-tippy-content]', {
@@ -155,6 +186,7 @@ tippy('[data-tippy-content]', {
 (function($){
 
 	$(document).ready(function(){
+	
 		// multiple select fields
 		$('.multiple-select select').multipleSelect({
 			filter: true,
@@ -168,6 +200,7 @@ tippy('[data-tippy-content]', {
 		$(".gform_wrapper .read-only textarea").attr("readonly", "");
 		$(".gform_wrapper .read-only textarea").text(stripHTMLTags);
 		$(".gform_wrapper .striptags textarea").text(stripHTMLTags);
+	
 	});	
 
 	function stripHTMLTags(){
@@ -175,3 +208,19 @@ tippy('[data-tippy-content]', {
 	}
 
 })(jQuery);
+
+function searchInterests() {
+	var input, filter, ul, li, a, i;
+	input = document.getElementById("interests-search");
+	filter = input.value.toUpperCase();
+	div = document.getElementById("interests-container");
+	a = div.getElementsByClassName("filter-group-btn");
+	for (i = 0; i < a.length; i++) {
+		txtValue = a[i].textContent || a[i].innerText;
+		if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			a[i].style.display = "";
+		} else {
+			a[i].style.display = "none";
+		}
+	}
+}

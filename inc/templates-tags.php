@@ -259,15 +259,22 @@ function cwnet_wisers_filters() {
 	$filter = CWNET_TX_IN;
 	$ins = get_terms($args);
 	$ins_out = '
-		<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
-			<li class="filter-group-item"><button data-filter="" class="filter-group-btn filter-btn disabled"><i class="icon-heart"></i> '.__('All interests','cwnet').'</button></li>
+		<div class="dropdown">
+			<div class="dropdown-btns">
+				<button data-target="#interests-container" class="filter-btn dropdown-btn"><i class="icon-heart"></i> '.__('Interests','cwnet').'</button>
+			</div>
+			<div id="interests-container" class="dropdown-content">
+				<button data-target="#interests-container" class="dropdown-content-right dropdown-btn"><i class="icon-cancel"></i></button>
+				<input class="filter-input" type="text" placeholder="'.__('Search interests...','cwnet').'" id="interests-search" onkeyup="searchInterests()">
+				<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
+					<li class="filter-group-item"><button data-target="#interests-container" data-filter="" class="filter-group-btn filter-btn disabled">'.__('All interests','cwnet').'</button></li>
 	';
 	if ( ! empty($ins) ) {
 		foreach ( $ins as $in )
-			$ins_out .= '<li class="filter-group-item"><button data-filter=".'.$filter.'-'.$in->slug.'" class="filter-group-btn filter-btn">'.$in->name.'</button></li>';
+			$ins_out .= '<li class="filter-group-item"><button data-target="#interests-container" data-filter=".'.$filter.'-'.$in->slug.'" class="filter-group-btn filter-btn">'.$in->name.'</button></li>';
 	
 	}
-	$ins_out .= '</ul>';
+	$ins_out .= '</ul></div></div>';
 
 	// circles
 //	$args = array(
