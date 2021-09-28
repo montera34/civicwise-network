@@ -48,11 +48,14 @@ function cwnet_slugify($urlString) {
 	$search = array('Ș', 'Ț', 'ş', 'ţ', 'Ş', 'Ţ', 'ș', 'ț', 'î', 'â', 'ă', 'Î', ' ', 'Ă', 'ë', 'Ë');
 	$replace = array('s', 't', 's', 't', 's', 't', 's', 't', 'i', 'a', 'a', 'i', 'a', 'a', 'e', 'E');
 	$str = str_replace($search, $replace, strtolower(trim($urlString)));
-	$str = preg_replace('/[^\w\d\-\ ]/', », $str);
+	$str = preg_replace('/[^\w\d\-\ ]/', '', $str);
 	$str = str_replace(' ', '-', $str);
 	$str = preg_replace('/-{2,}/', '-', $str);
 	return $str;
 }
+
+// include functions to import content
+require_once("inc/import.php");
 
 // include wordpress functions filters and redefinitions
 require_once("inc/wordpress-redefinitions.php");
@@ -72,4 +75,5 @@ require_once("inc/templates-tags.php");
 // include gform functions
 require_once("inc/gforms.php");
 
+// add_action('init','cwnet_insert_countries',999);
 ?>

@@ -88,6 +88,7 @@ add_action('get_header', 'cwnet_redirect');
  *
  */
 function cwnet_go_out() {
+	global $post;
 	ob_start();
 	$u_current = esc_url_raw( get_permalink($post->ID) );
 	wp_safe_redirect( wp_login_url($u_current) );
