@@ -148,7 +148,6 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	$ins = array();
 	$ins_new = array();
 	$cos = array();
-	$cos_new = array();
 	$lcs = array();
 	$lcs_new = array();
 	$lgs = array();
@@ -187,12 +186,6 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 		elseif ( $f->inputName == CWNET_TX_CO ) {
 			$v = is_object( $f ) ? $f->get_value_export( $entry ) : '';
 			$cos = explode( ',', $v );
-		}
-		elseif ( $f->inputName == CWNET_TX_CO.'-new' ) {
-			$v = $entry[$f->id];
-			if ( $v == '' )
-				continue;
-			$cos_new = trim($v);
 		}
 		elseif ( $f->inputName == CWNET_TX_LC ) {
 			$v = is_object( $f ) ? $f->get_value_export( $entry ) : '';
@@ -237,12 +230,7 @@ function cwnet_gform_update_u_fields( $entry,$form ) {
 	}
 
 	delete_user_meta($u->ID,'user_'.CWNET_TX_CO);
-	if ( !empty($cos_new) ) {
-		$tn = wp_insert_term($cos_new,CWNET_TX_CO);
-		if ( ! is_wp_error($tn) )
-			add_user_meta($u->ID,'user_'.CWNET_TX_CO,$tn['term_id']);
-	}
-	elseif ( !empty($cos) ) {
+	if ( !empty($cos) ) {
 		foreach ( $cos as $t ) {
 			add_user_meta($u->ID,'user_'.CWNET_TX_CO,$t);
 		}
