@@ -33,7 +33,6 @@ function cwnet_api_users_per_location( $data ) {
 	// build index of cities with users
 	// build array
 	$args = array(
-		'role' => 'Subscriber',
 		'number' => '-1',
 		'count_total' => false,
 		'fields' => array('ID'),

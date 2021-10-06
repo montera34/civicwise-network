@@ -64,7 +64,6 @@ function cwnet_get_u_edit_form() {
 function cwnet_wisers_mosaic() {
 	
 	$args = array(
-		'role' => 'Subscriber',
 		'number' => '-1',
 		'count_total' => false,
 		'fields' => array('ID'),
