@@ -53,8 +53,7 @@ function cwnet_dashboard_access($user) {
 		return;
 
 	if ( is_admin() && ! cwnet_is_user_staff($user) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-		$p = get_page_by_path(CWNET_P_PROFILE);
-		$perma = get_permalink($p->ID);
+		$perma = get_permalink(CWNET_P_PROFILE);
 		wp_redirect( $perma );
 		exit;
 	}
