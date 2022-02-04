@@ -58,7 +58,7 @@ Promise.all([countries]).then(function(values){
 		.on('click', function(e,d) {
 			if ( d.properties.user_count == 0 )
 				return;
-			sidebar.html('<button class="filter-btn filter-group-btn disabled">'+d.properties.name+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter=""><i class="icon-cancel"></i></button>').transition().duration(200).style('display', 'block')
+			sidebar.style('display','inline-block').html('<button class="filter-btn filter-group-btn disabled">'+d.properties.name+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter=""><i class="icon-cancel"></i></button>')
 		});
 
 	// Isotope filtrable mosaic
@@ -108,6 +108,10 @@ Promise.all([countries]).then(function(values){
 			$('.map-locations path').removeClass('disabled');
 			$(this).addClass('disabled');
 
+			filter = $(this).attr('data-filter');
+			$('#locations-container .filter-group').find('.disabled').removeClass('disabled');
+			$('#locations-container .filter-group [data-filter="'+filter+'"').addClass('disabled');
+			
 			var $button = $( event.currentTarget );
 			// get group key
 			var $buttonGroup = $button.parents('.filter-group');
@@ -142,8 +146,18 @@ Promise.all([countries]).then(function(values){
 			var $button = $( event.currentTarget );
 			var target = $button.attr('data-target');
 			$(target).hide();
-			$(this).parents('.dropdown').children('.dropdown-btns').find('.filter-group-btn').remove();
-			$(this).parents('.dropdown').children('.dropdown-btns').append('<button class="filter-btn filter-group-btn disabled">'+$button.text()+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter="" data-target="'+target+'"><i class="icon-cancel"></i></button>');
+			var region = $(this).attr('data-filter');
+			if ( $(this).parents('.dropdown-content').hasClass('map-connection') ) {
+				$('#map-sidebar').css('display','inline-block');
+				$('#map-sidebar').find('.filter-group-btn').remove();
+				$('#map-sidebar').append('<button class="filter-btn filter-group-btn disabled">'+$button.text()+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter="" data-target="'+target+'"><i class="icon-cancel"></i></button>');
+				$('.map-locations path').removeClass('disabled');
+				$('.map-locations [data-filter="'+region+'"').addClass('disabled');
+			}
+			else {
+				$(this).parents('.dropdown').children('.dropdown-btns').find('.filter-group-btn').remove();
+				$(this).parents('.dropdown').children('.dropdown-btns').append('<button class="filter-btn filter-group-btn disabled">'+$button.text()+'</button><button class="filter-btn filter-group-btn filter-btn-reset" data-filter="" data-target="'+target+'"><i class="icon-cancel"></i></button>');
+			}
 		});
 		$('.dropdown').on( 'click', '.filter-btn-reset', function(event) {
 			var $button = $( event.currentTarget );
@@ -176,7 +190,8 @@ Promise.all([countries]).then(function(values){
 })
 
 let tooltip = d3.select("body").append('div').attr('id', 'map-tooltip').attr('class','tooltip button filter-btn disabled').attr('style', 'position: absolute; display: none;');
-let sidebar = d3.select("#map").append('div').attr('id', 'map-sidebar').attr('class','map-aside filter-group').attr('style', 'display: none;');
+//let sidebar = d3.select("#locations-dropdown").append('div').attr('id', 'map-sidebar').attr('class','map-aside filter-group').attr('style', 'display: none;');
+let sidebar = d3.select("#locations-dropdown .dropdown-btns").append('div').attr('id','map-sidebar').style('display','none');
 
 // tippy tooltips
 tippy('[data-tippy-content]', {
@@ -214,6 +229,22 @@ function searchInterests() {
 	input = document.getElementById("interests-search");
 	filter = input.value.toUpperCase();
 	div = document.getElementById("interests-container");
+	a = div.getElementsByClassName("filter-group-btn");
+	for (i = 0; i < a.length; i++) {
+		txtValue = a[i].textContent || a[i].innerText;
+		if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			a[i].style.display = "";
+		} else {
+			a[i].style.display = "none";
+		}
+	}
+}
+
+function searchLocations() {
+	var input, filter, ul, li, a, i;
+	input = document.getElementById("locations-search");
+	filter = input.value.toUpperCase();
+	div = document.getElementById("locations-container");
 	a = div.getElementsByClassName("filter-group-btn");
 	for (i = 0; i < a.length; i++) {
 		txtValue = a[i].textContent || a[i].innerText;

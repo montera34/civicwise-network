@@ -228,7 +228,7 @@ function cwnet_wisers_mosaic() {
  */
 function cwnet_wisers_filters() {
 
-	// connectors
+	// countries
 	$args = array(
 		'role' => 'Subscriber',
 		'number' => '-1',
@@ -236,12 +236,49 @@ function cwnet_wisers_filters() {
 		'fields' => array('ID'),
 		'meta_query' => array(
 			array(
-				'key' => 'user_connector',
+				'key' => 'user_in_map',
 				'value' => 1,
 			)
 		)
 	);
-	$cons = get_users($args);
+	$us = get_users($args);
+	$filter = 'location';
+	$cos = array();
+	foreach ( $us as $u ) {
+		$u_co = get_user_meta( $u->ID, 'user_country',true);
+
+		if ( empty($u_co) || is_wp_error($u_co) )
+			continue;
+
+		$c = $u_co['name'];
+		$s = $u_co['slug'];
+		$k = array_search($c,array_column($cos,'name'));
+		if ( $k === false )
+			$cos[] = array(
+				'name' => $c,
+				'slug' => $s,
+			);
+	}
+	$cos_out = '
+		<div id="locations-dropdown" class="dropdown">
+			<div class="dropdown-btns">
+				<button data-target="#locations-container" class="filter-btn dropdown-btn"><i class="icon-location"></i> '.__('Location','cwnet').'</button>
+			</div>
+			<div id="locations-container" class="dropdown-content map-connection">
+				<button data-target="#locations-container" class="dropdown-content-right dropdown-btn"><i class="icon-cancel"></i></button>
+				<input class="filter-input" type="text" placeholder="'.__('Search locations...','cwnet').'" id="locations-search" onkeyup="searchLocations()">
+				<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
+					<li class="filter-group-item"><button data-target="#locations-container" data-filter="" class="filter-group-btn filter-btn disabled">'.__('All locations','cwnet').'</button></li>
+	';
+	if ( ! empty($cos) ) {
+		foreach ( $cos as $co )
+			$cos_out .= '<li class="filter-group-item"><button data-target="#locations-container" data-filter=".'.$filter.'-'.$co['slug'].'" class="filter-group-btn filter-btn">'.$co['name'].'</button></li>';
+	
+	}
+	$cos_out .= '</ul></div></div>';
+
+	
+	// connectors
 	$filter = 'connector';
 	$cons_out = '
 		<ul class="filter-list filter-group" data-filter-group="'.$filter.'">
@@ -295,7 +332,7 @@ function cwnet_wisers_filters() {
 //	}
 //	$cls_out .= '</ul>';
 
-	$filters_out ='<div class="filters">'.$cons_out.$ins_out.'</div>';
+	$filters_out ='<div class="filters">'.$cos_out.$cons_out.$ins_out.'</div>';
 
 	return $filters_out;
 }
